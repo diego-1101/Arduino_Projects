@@ -1,4 +1,4 @@
-# Projeto final de Sistemas Embarcados- Músculos Sonoros
+# Projeto final de Sistemas Embarcados- Músculos Sonoros (PT)
 
 O requisito do projeto desenvolvido como trabalho final da disciplina de Sistemas Embarcados feita por mim no 7° Semestre de Engenharia Biomédica na UNIFESP era aplciar todos os conhecimentos adquiridos na disciplina através da implementação de uma comunicação entre o microcontrolador Programmable Interface Controller (PIC) e o Arduino.
 
@@ -7,8 +7,8 @@ Desta forma, o projeto que implementei visa interpretar quando o sinal analógic
 
 Os códigos para implementar os "Músculos Sonoros" estão dividos neste repositório entre o código do PIC e o código do Arduino.
 
-(ENG)
-# Final Project of Embedded Systems - Musical Muscles
+
+# Final Project of Embedded Systems - Musical Muscles (ENG)
 
 The requirement for the project developed as the final work for the Embedded Systems course, which I completed in the 7th semester of Biomedical Engineering at UNIFESP, was to apply all the knowledge acquired during the course through the implementation of communication between the Programmable Interface Controller (PIC) microcontroller and the Arduino.
 
