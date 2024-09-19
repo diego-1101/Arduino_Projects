@@ -1,0 +1,79 @@
+#define BUZZER_PIN PORTC.F1
+
+sbit LCD_RS at RE2_bit; 
+sbit LCD_EN at RE1_bit;
+sbit LCD_D7 at RD7_bit;
+sbit LCD_D6 at RD6_bit;
+sbit LCD_D5 at RD5_bit;
+sbit LCD_D4 at RD4_bit;
+
+sbit LCD_RS_Direction at TRISE2_bit;
+sbit LCD_EN_Direction at TRISE1_bit;
+sbit LCD_D7_Direction at TRISD7_bit;
+sbit LCD_D6_Direction at TRISD6_bit;
+sbit LCD_D5_Direction at TRISD5_bit;
+sbit LCD_D4_Direction at TRISD4_bit;
+
+// Definindo pino para o LED
+#define LED_PIN PORTB.F7 
+
+// Definindo uma flag para garantir o funcionamento adequado
+int flag = 1;
+
+void piscarLED(int vezes, int intervalo) {
+    for (int i = 0; i < vezes; i++) {
+        LED_PIN = 1;          // Liga o LED
+        Delay_ms(intervalo);   // Espera pelo intervalo definido
+        LED_PIN = 0;          // Desliga o LED
+        Delay_ms(intervalo);   // Espera novamente o intervalo
+    }
+}
+
+void main() {
+    unsigned int controle = 0;
+    unsigned int dutyCycle = 0;
+    
+    // Configurações dos pinos
+    TRISB = 0x00;         // Define todos os pinos do PORTB como saída
+    TRISC1_bit = 0;       // Define pino do Buzzer como saída
+    LED_PIN = 0;          // Inicializa o LED desligado
+
+    ADCON1 = 0x0f;        // Desabilita funções analógicas nos pinos
+    UART1_Init(9600);     // Inicializa UART com baud rate de 9600
+    PWM1_Init(5000);      // Inicializa o PWM com frequência de 5kHz
+    PWM1_Start();         // Inicia o PWM
+
+    Lcd_Init();           // Inicializa o LCD
+    Lcd_Cmd(_LCD_CURSOR_OFF);
+    Lcd_Cmd(_LCD_CLEAR);
+    
+    while (1) {
+        if (UART1_Data_Ready()) {
+            controle = UART1_Read();  // Lê o valor recebido via UART
+            
+            if (controle == '0') {
+		if(flag == 1){
+                Lcd_Cmd(_LCD_CLEAR);  // Limpa o LCD
+                Lcd_Out(1, 1, "Bem-vindo");  // Exibe "Bem-vindo"
+                
+                piscarLED(3, 200);  // Pisca o LED 3x com intervalo de 200ms
+                
+                Lcd_Cmd(_LCD_CLEAR);  // Limpa o LCD
+                Lcd_Out(1, 1, "Musculos sonoros");  // Exibe "Musculos sonoros"
+		flag = 0;
+		}
+                
+            } else if (controle == '1') {
+                piscarLED(1, 150);  // Pisca o LED 1 vez com intervalo de 150ms
+                
+            } else if (controle == '2') {
+                Lcd_Cmd(_LCD_CLEAR);  // Limpa o LCD
+                Lcd_Out(1, 1, "Voce Finalizou");  // Exibe "Voce Finalizou"
+                
+            } else {
+                dutyCycle = controle;  // O valor recebido via UART será o valor do potenciômetro
+                PWM1_Set_Duty(dutyCycle);  // Ajusta o duty cycle do PWM da ventoinha
+            }
+        }
+    }
+}
